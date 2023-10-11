@@ -1,0 +1,32 @@
+fuse:
+  dir: "/var/primary/fuse"  # Path to FUSE directory for primary replica
+  allow-other: false
+  debug: false
+
+data:
+  dir: "/var/primary/data"  # Path to internal data storage for primary replica
+  compress: true
+  retention: "10m"
+  retention-monitor-interval: "1m"
+
+exec: "uvicorn api:app --host 0.0.0.0 --port 5000"  # Assuming your UVicorn server runs on port 5000
+
+http:
+  addr: ":20202"  # HTTP API server address for primary replica
+
+lease:
+  type: "static"
+  advertise-url: "http://$HOSTNAME:20202"
+  hostname: ""
+  candidate: true
+  databases: ["books.db"]  # database to replicate
+
+exit-on-error: false
+skip-sync: false
+
+tracing:
+  enabled: true
+  path: "/var/log/lifefs/trace.log"
+  max-size: 64
+  max-count: 10
+  compress: true

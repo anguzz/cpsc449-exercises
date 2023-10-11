@@ -1,0 +1,52 @@
+{
+    "$schema": "https://www.krakend.io/schema/v2.4/krakend.json",
+    "version": 3,
+    "name": "KrakenD - API Gateway",
+    "timeout": "3000ms",
+    "cache_ttl": "300s",
+    "endpoints": [
+        {
+            "endpoint": "/api/books",
+            "method": "GET",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/books",
+                    "host": ["http://localhost:5000"],
+                    "encoding": "no-op",
+                    "extra_config": {}
+                }
+            ]
+        },
+        {
+            "endpoint": "/api/books",
+            "method": "POST",
+            "output_encoding": "json",
+            "backend": [
+              {
+                "url_pattern": "/books",
+                "host": ["http://localhost:5000"],
+                "extra_config": {
+                  "error_backend_alias": 
+                  {
+                    "http_status_code": 409,
+                    "http_body": "409 Conflict with current state\n"
+                  }
+                 }
+                }
+            ]
+    },
+        {
+            "endpoint": "/api/books/{id}",
+            "method": "GET",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/books/{id}",
+                    "host": ["http://localhost:5000"],
+                    "encoding": "no-op"
+                }
+            ]
+        }
+    ]
+}

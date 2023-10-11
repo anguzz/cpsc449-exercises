@@ -1,0 +1,29 @@
+fuse:
+  dir: "/var/secondary/fuse"  # Path to FUSE directory for secondary replica
+  allow-other: false
+  debug: false
+
+data:
+  dir: "/var/secondary/data"  # Path to internal data storage for secondary replica
+  compress: true
+  retention: "10m"
+  retention-monitor-interval: "1m"
+
+http:
+  addr: ":20203"  # HTTP API server address for secondary replica (different port)
+
+lease:
+  type: "static"
+  advertise-url: "http://$HOSTNAME:20203"  # HTTP API server address for secondary replica
+  hostname: ""
+  candidate: false  # Secondary replica is not a candidate for primary
+
+exit-on-error: false
+skip-sync: false
+
+tracing:
+  enabled: true
+  path: "/var/log/lifefs/trace.log"
+  max-size: 64
+  max-count: 10
+  compress: true
